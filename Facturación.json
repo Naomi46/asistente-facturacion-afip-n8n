@@ -1,0 +1,2455 @@
+{
+  "name": "Facturación",
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {
+          "language": "es"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.7,
+      "position": [
+        -192,
+        -2768
+      ],
+      "id": "af4911ab-4b05-445b-aea9-403f4d09b68b",
+      "name": "Transcribir Audio1",
+      "credentials": {
+        "openAiApi": {
+          "id": "n9uyI4VfRzBF9m5N",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a33f881d-4fd3-4691-9c94-a43da83ffe79",
+              "name": "data",
+              "value": "=\n{{ $json.mensaje }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -672,
+        -2768
+      ],
+      "id": "33537091-d4e3-456c-aea2-b817721a33a2",
+      "name": "Audio1"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "909882c8-4453-427b-aceb-735e8405d625",
+                    "leftValue": "={{ $json.tipo_mensaje }}",
+                    "rightValue": "audio",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "chatAudio"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "370b82a6-9e8a-4121-8edb-068aed220d07",
+                    "leftValue": "={{ $json.tipo_mensaje }}",
+                    "rightValue": "=texto",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "chatText"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "4379bc35-4152-4fb4-ac2e-6d395df1af37",
+                    "leftValue": "={{ $json.tipo_mensaje }}",
+                    "rightValue": "documento",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Imagen"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f7f27e6d-989b-46e4-abee-e3bbd730e0e0",
+                    "leftValue": "",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "looseTypeValidation": "={{ false }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1408,
+        -2560
+      ],
+      "id": "a62ef165-aeb3-421c-b6fe-838ed2b94aab",
+      "name": "Formato1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1821d5cf-37d9-491b-ae28-93f6333fbf48",
+              "name": "id",
+              "value": "={{ $json.id }}{{ $json.user_id }}",
+              "type": "string"
+            },
+            {
+              "id": "299e8016-4d33-44ba-a17c-9b7ecc832243",
+              "name": "nombre",
+              "value": "={{ $('Code1').item.json.nombre }}",
+              "type": "string"
+            },
+            {
+              "id": "db649210-3008-4633-96ce-31ad0b01a409",
+              "name": "mensaje",
+              "value": "={{ $json.mensaje }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        672,
+        -2560
+      ],
+      "id": "7b52f74f-770f-4d79-8e50-f5067c011ee9",
+      "name": "get text1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5.1",
+          "mode": "list",
+          "cachedResultName": "gpt-5.1"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        3520,
+        -2304
+      ],
+      "id": "aea89bd6-79e3-43e4-90fe-408f9cb31eca",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "n9uyI4VfRzBF9m5N",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "text": "=Tu tarea es leer esta imagen y extraer los datos para crear una factura nueva.\nNO necesitas identificar al emisor (el profesional), ya sabemos quién es.\n\nCéntrate EXCLUSIVAMENTE en extraer:\n1. El MONTO TOTAL a cobrar.\n2. El NOMBRE o CUIT del CLIENTE (a quién se le factura).\n3. El CONCEPTO o descripción del servicio/producto.\n\nDevuelve un resumen simple en texto plano, por ejemplo:\n\"Se detecta un monto de $5000 para el cliente Juan Pérez por diseño web.\"\n\nSi la imagen no es clara, intenta adivinar el monto y el concepto.",
+        "inputType": "base64",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.7,
+      "position": [
+        -704,
+        -2304
+      ],
+      "id": "a1d73aec-1322-4b25-ace8-4bd8574966b4",
+      "name": "Analizar imagen2",
+      "retryOnFail": true,
+      "credentials": {
+        "openAiApi": {
+          "id": "n9uyI4VfRzBF9m5N",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "92891225-855e-4bab-aaae-50547f75e5b2",
+              "name": "nombre",
+              "value": "={{ $json.nombre }}",
+              "type": "string"
+            },
+            {
+              "id": "3f408122-e1b2-4a96-b2b0-e555146c0576",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "number"
+            },
+            {
+              "id": "2e3eeaaf-60ca-4d2d-ade2-703510f36d57",
+              "name": "mensaje",
+              "value": "={{ $json.mensaje }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -176,
+        -2304
+      ],
+      "id": "de436f52-51ef-4b6c-98a1-f21d8fd9d87f",
+      "name": "get text4"
+    },
+    {
+      "parameters": {
+        "description": "\"Utiliza esta herramienta EXCLUSIVAMENTE cuando debas generar una nueva factura. Recibe los datos del cliente y del profesional. IMPORTANTE: No respondas al usuario confirmando la factura hasta que hayas ejecutado esta herramienta y recibido el 'numero_factura' y el 'pdf_url' como respuesta. Si no ejecutas esta herramienta, la factura NO existe.\"",
+        "workflowId": {
+          "__rl": true,
+          "value": "WrQBnTSo3APCFB7Z",
+          "mode": "list",
+          "cachedResultName": "AFIP_Factura"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "monto": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('monto', ``, 'string') }}",
+            "concepto": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('concepto', ``, 'string') }}",
+            "cuit_profesional": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('cuit_profesional', ``, 'string') }}",
+            "archivo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('archivo', ``, 'string') }}",
+            "carpeta": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('carpeta', ``, 'string') }}",
+            "punto_venta": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('punto_venta', ``, 'number') }}",
+            "accion": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('accion', ``, 'string') }}",
+            "nombre_profesional": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nombre_profesional', ``, 'string') }}",
+            "categoria_iva": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('categoria_iva', ``, 'string') }}",
+            "nombre_cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nombre_cliente', ``, 'string') }}",
+            "categoria_iva_cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('categoria_iva_cliente', ``, 'string') }}",
+            "iibb_profesional": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('iibb_profesional', ``, 'string') }}",
+            "direccion_cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('direccion_cliente', ``, 'string') }}",
+            "condicion_venta": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('condicion_venta', ``, 'string') }}",
+            "inicio_actividades": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('inicio_actividades', ``, 'string') }}",
+            "Direccion_profesional": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Direccion_profesional', ``, 'string') }}",
+            "cuit_Cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('cuit_Cliente', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "accion",
+              "displayName": "accion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "nombre_profesional",
+              "displayName": "nombre_profesional",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "cuit_profesional",
+              "displayName": "cuit_profesional",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "categoria_iva",
+              "displayName": "categoria_iva",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Direccion_profesional",
+              "displayName": "Direccion_profesional",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "iibb_profesional",
+              "displayName": "iibb_profesional",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "inicio_actividades",
+              "displayName": "inicio_actividades",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "nombre_cliente",
+              "displayName": "nombre_cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "cuit_Cliente",
+              "displayName": "cuit_Cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "categoria_iva_cliente",
+              "displayName": "categoria_iva_cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "direccion_cliente",
+              "displayName": "direccion_cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "condicion_venta",
+              "displayName": "condicion_venta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "punto_venta",
+              "displayName": "punto_venta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            },
+            {
+              "id": "monto",
+              "displayName": "monto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            },
+            {
+              "id": "concepto",
+              "displayName": "concepto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "carpeta",
+              "displayName": "carpeta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "archivo",
+              "displayName": "archivo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        3648,
+        -2304
+      ],
+      "id": "df371659-0e20-4425-81e5-5173f8fc40b3",
+      "name": "AFIP_Factura"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "TU_ID_DE_GOOGLE_SHEET",
+          "mode": "list",
+          "cachedResultName": "BD Facturación",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/TU_ID_DE_GOOGLE_SHEET/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1231599357,
+          "mode": "list",
+          "cachedResultName": "ResumenConceptos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/TU_ID_DE_GOOGLE_SHEET/edit#gid=1231599357"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        3808,
+        -2304
+      ],
+      "id": "fc65a620-9a55-4601-b413-fd0d915f5aea",
+      "name": "ResumenConceptos",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ubIMqprwL7Haak5h",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "TU_ID_DE_GOOGLE_SHEET",
+          "mode": "list",
+          "cachedResultName": "BD Facturación",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/TU_ID_DE_GOOGLE_SHEET/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 314744667,
+          "mode": "list",
+          "cachedResultName": "Pendientes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/TU_ID_DE_GOOGLE_SHEET/edit#gid=314744667"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        3936,
+        -2304
+      ],
+      "id": "bf9c5564-ca29-4c66-a3f6-5e96f5fb5e14",
+      "name": "Pendientes",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ubIMqprwL7Haak5h",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "TU_ID_DE_GOOGLE_SHEET",
+          "mode": "list",
+          "cachedResultName": "BD Facturación",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/TU_ID_DE_GOOGLE_SHEET/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1231599357,
+          "mode": "list",
+          "cachedResultName": "ResumenConceptos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/TU_ID_DE_GOOGLE_SHEET/edit#gid=1231599357"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Concepto": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Concepto', ``, 'string') }}",
+            "Cantidad de Facturas": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Cantidad_de_Facturas', ``, 'string') }}",
+            "Monto Total": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Monto_Total', ``, 'string') }}",
+            "Fecha": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Fecha', ``, 'string') }}",
+            "ID ": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('ID_', ``, 'string') }}",
+            "Factura ": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Factura_', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "ID ",
+              "displayName": "ID ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Concepto",
+              "displayName": "Concepto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Cantidad de Facturas",
+              "displayName": "Cantidad de Facturas",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Monto Total",
+              "displayName": "Monto Total",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Factura ",
+              "displayName": "Factura ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        4064,
+        -2304
+      ],
+      "id": "8977853b-9d00-428f-a90c-15f13d434c7e",
+      "name": "Agregar en el resumen",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ubIMqprwL7Haak5h",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "TU_ID_DE_GOOGLE_SHEET",
+          "mode": "list",
+          "cachedResultName": "BD Facturación",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/TU_ID_DE_GOOGLE_SHEET/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 451546079,
+          "mode": "list",
+          "cachedResultName": "Clientes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/TU_ID_DE_GOOGLE_SHEET/edit#gid=451546079"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        4304,
+        -2304
+      ],
+      "id": "d5e8ecaf-f3c3-417f-b302-327e0df6d683",
+      "name": "Clientes",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ubIMqprwL7Haak5h",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "TU_ID_DE_GOOGLE_SHEET",
+          "mode": "list",
+          "cachedResultName": "BD Facturación",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/TU_ID_DE_GOOGLE_SHEET/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 918570089,
+          "mode": "list",
+          "cachedResultName": "FacturasGeneradas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/TU_ID_DE_GOOGLE_SHEET/edit#gid=918570089"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "N° de Factura": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('N__de_Factura', ``, 'string') }}",
+            "Categoria IVA": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Categoria_IVA', ``, 'string') }}",
+            "CUIT/DNI": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('CUIT_DNI', ``, 'string') }}",
+            "Nombre y Apellido": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Nombre_y_Apellido', ``, 'string') }}",
+            "Punto de Venta": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Punto_de_Venta', ``, 'string') }}",
+            "Fecha": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Fecha', ``, 'string') }}",
+            "Monto": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Monto', ``, 'string') }}",
+            "Estado final": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Estado_final', ``, 'string') }}",
+            "Concepto": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Concepto', ``, 'string') }}",
+            "Telefono ": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Telefono_', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "N° de Factura",
+              "displayName": "N° de Factura",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nombre y Apellido",
+              "displayName": "Nombre y Apellido",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "CUIT/DNI",
+              "displayName": "CUIT/DNI",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Categoria IVA",
+              "displayName": "Categoria IVA",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Punto de Venta",
+              "displayName": "Punto de Venta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Monto",
+              "displayName": "Monto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Telefono ",
+              "displayName": "Telefono ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Concepto",
+              "displayName": "Concepto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Estado final",
+              "displayName": "Estado final",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        4416,
+        -2304
+      ],
+      "id": "12dcc422-5ab1-4d6e-930a-fe132497e58e",
+      "name": "Agregar facturas",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ubIMqprwL7Haak5h",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "TU_ID_DE_GOOGLE_SHEET",
+          "mode": "list",
+          "cachedResultName": "BD Facturación",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/TU_ID_DE_GOOGLE_SHEET/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 451546079,
+          "mode": "list",
+          "cachedResultName": "Clientes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/TU_ID_DE_GOOGLE_SHEET/edit#gid=451546079"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Categoria de IVA": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Categoria_de_IVA', ``, 'string') }}",
+            "Contacto": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Contacto', ``, 'string') }}",
+            "Fecha": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Fecha', ``, 'string') }}",
+            "Nombre y apellido": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Nombre_y_apellido', ``, 'string') }}",
+            "CUIT": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('CUIT', ``, 'string') }}",
+            "DNI": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('DNI', ``, 'string') }}",
+            "Direccion ": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Direccion_', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nombre y apellido",
+              "displayName": "Nombre y apellido",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "CUIT",
+              "displayName": "CUIT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "DNI",
+              "displayName": "DNI",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Categoria de IVA",
+              "displayName": "Categoria de IVA",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Contacto",
+              "displayName": "Contacto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Direccion ",
+              "displayName": "Direccion ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        4544,
+        -2304
+      ],
+      "id": "79a0a6d9-60c7-4a64-9c14-18a14657e288",
+      "name": "Agregar cliente",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ubIMqprwL7Haak5h",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.data }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -448,
+        -2768
+      ],
+      "id": "f3e8bd48-ad11-4414-8d4c-63c298a3531a",
+      "name": "Get a file",
+      "webhookId": "951cdace-986f-4c6f-8ba5-70ffbeebf273",
+      "credentials": {
+        "telegramApi": {
+          "id": "fPfrpCrLlbE5zHX9",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -976,
+        -2304
+      ],
+      "id": "f43799b2-1f3f-4106-a4f8-1738f23f5e22",
+      "name": "Get a file1",
+      "webhookId": "8eabdcba-c168-43e6-bf14-8243a39912d7",
+      "credentials": {
+        "telegramApi": {
+          "id": "fPfrpCrLlbE5zHX9",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Entrada de datos').item.json.mensaje }}",
+        "options": {
+          "systemMessage": "=ROL Y OBJETIVO\nSos un asistente administrativo eficiente para facturación y gestión de clientes. Tu prioridad es la velocidad y no hacer preguntas innecesarias. Hablás en español rioplatense (Argentina), tono amable pero directo.\nIMPORTANTE: El usuario ya está validado y registrado en el sistema. NO necesitás verificar si está registrado. Los datos del profesional deben obtenerse de la herramienta \"Profesionales\".\n\nDATOS DE ENTRADA (CONTEXTO ACTUAL) \nMENSAJES RECIENTES: {{ $json.mensajes }} ||{{ $('Code').item.json.mensajes }}\nID_Telegram USUARIO: {{ $json.id }}\nNOMBRE PROFESIONAL: {{ $json.nombre_profesional || 'Profesional' }}\n\n\n🧠 PROCESO DE PENSAMIENTO (Seguí este orden estrictamente)\nPASO 1: EXTRACCIÓN DE DATOS (Lectura del Contexto)\nAnalizá los MENSAJES RECIENTES y extraé:\nIntención del usuario:\n\nFacturar\nRegistrar nuevo cliente\nConsultar información\nEditar/eliminar algo\n\nDatos del Cliente:\n\nNombre completo\nDNI/CUIT (solo números, sin guiones ni puntos)\nEmail (si lo menciona)\nDirección (OBLIGATORIO para clientes nuevos)\n\nDatos de la Factura:\n\nMonto (número, puede incluir decimales)\nConcepto/Descripción del servicio\n\nCondición de Venta (MUY IMPORTANTE):\nBuscá palabras clave:\n\n\"contado\", \"transferencia\", \"efectivo\", \"débito\", \"crédito\" → Todo esto es Contado\n\"cta cte\", \"cuenta corriente\", \"fiado\", \"crédito a 30 días\" → Es Cuenta Corriente\n\nPASO 1.5: OBTENCIÓN DE DATOS DEL PROFESIONAL\nUtilizá la herramienta \"Profesionales\" para obtener los datos necesarios del profesional (CUIT, nombre, categoría de IVA, etc.) asociados al ID_Telegram del usuario.\n\nPASO 2: LÓGICA DE CLIENTE (Evitar Duplicados)\nREGLA DE ORO: Siempre buscá primero antes de registrar.\nSi detectás un DNI/CUIT o un Nombre completo:\n\nEjecutá PRIMERO la herramienta \"Clientes\" (búsqueda)\nSi la herramienta devuelve un cliente:\n\n✅ USÁ ESOS DATOS\n❌ NO preguntes DNI, IVA, ni dirección de nuevo\n✅ Asumí que ya tenés todo lo necesario\n\nSi la herramienta NO devuelve nada:\n\nRecién ahí asumí que es un cliente nuevo\nVerificá si tenés los datos mínimos para registrarlo:\n\nNombre completo\nDNI/CUIT\nCondición IVA\n**Dirección (OBLIGATORIO)**\nContacto (email o teléfono - OPCIONAL)\n\n🛑 REGLAS DE INTERACCIÓN (OUTPUT)\nCASO 1: FALTA INFORMACIÓN PARA FACTURAR\nSi la intención es facturar, verificá tener estos 4 datos obligatorios:\n\n✅ Cliente Identificado (DNI/CUIT o ya buscado en la base)\n✅ Monto\n✅ Concepto\n✅ Condición de Venta (CRÍTICO - no asumas)\n\nSi falta algo, preguntá de forma directa:\nFalta Condición de Venta:\n\"¿Cómo se paga? (Contado o Cta Cte)\"\nFalta Cliente:\n\"¿A nombre de quién hacemos la factura? (Pasame DNI o CUIT si lo tenés)\"\nFalta Monto:\n\"¿Por cuánto es la factura?\"\nFalta Concepto:\n\"¿Qué servicio o producto facturamos?\"\n\nCASO 2: REGISTRO DE CLIENTE NUEVO\nSolo si:\n\nBuscaste en la base de datos usando la herramienta \"Clientes\"\nNO encontraste coincidencias\nEl usuario quiere registrar al cliente\n\nDatos obligatorios para registrar:\n\nNombre completo\nDNI/CUIT (solo números)\nCondición IVA (Responsable Inscripto, Monotributista, Consumidor Final, Exento)\n**Dirección (OBLIGATORIO - calle, número, ciudad)**\nContacto (email/teléfono - OPCIONAL pero recomendado)\n\nCómo pedirlos:\n\nPedí los datos faltantes agrupados de forma eficiente\nNO pidas lo que el usuario ya te dijo\n**SIEMPRE pedí la dirección si no la mencionó**\nEjemplo: \"Para registrar a Juan Pérez necesito: DNI/CUIT, condición de IVA (¿es monotributista, responsable inscripto...?) y la dirección completa (calle, número, ciudad).\"\n\nCASO 3: CONFIRMACIÓN Y EJECUCIÓN\nSi tenés TODO lo necesario:\n\n❌ NO preguntes \"¿genero la factura?\" ni \"¿confirmo?\"\n✅ Ejecutá directamente las herramientas de facturación (AFIP) con los datos del cliente (herramienta \"Clientes\") y los datos del profesional (herramienta \"Profesionales\").\n✅ **IMPORTANTE: Cuando AFIP devuelva la respuesta, guardá la URL del PDF en la herramienta \"Añadir al resumen\" junto con los demás datos de la factura.**\n✅ Respondé de forma simple:\n\n\"Listo, factura generada por $[monto] para [nombre cliente] (Condición: [Contado/Cta Cte]).\"\nO si necesitás más detalle:\n\"Factura generada ✅\n- Cliente: [Nombre]\n- Monto: $[monto]\n- Concepto: [concepto]\n- Condición: [Contado/Cta Cte]\n[URL del PDF si está disponible]\"\n\n\nPASO 4: REGISTRO EN RESUMEN CONCEPTO\n**Después de generar la factura en AFIP:**\n\nEjecutá la herramienta \"Resumen Concepto\" para registrar:\n- Monto\n- Concepto/Descripción\n- Cliente (nombre)\n- Condición de Venta\n- **URL del PDF (obtenida de la respuesta de AFIP)**\n- Fecha (automática)\n- Número de factura (si está disponible)\n\n🚫 PROHIBICIONES ABSOLUTAS\n\n❌ NO preguntes datos que ya están en \"MENSAJES RECIENTES\"\n\nSi el usuario dijo \"factura para Juan Pérez por $5000\", NO preguntes el nombre ni el monto\n\n❌ NO preguntes datos que ya devolvió la herramienta \"Clientes\"\n\nSi encontraste al cliente, ya tenés DNI, IVA, dirección → NO los pidas de nuevo\n\n❌ NO asumas la Condición de Venta si no es obvia\n\nAnte la duda: preguntá\nSolo asumí \"Contado\" si dice explícitamente \"efectivo\", \"transferencia\", etc.\n\n❌ NO digas frases como:\n\n\"Voy a buscar en la base de datos\"\n\"Déjame verificar\"\n\"Un momento mientras proceso\"\nSolo hacelo y respondé con el resultado\n\n❌ NO confirmes acciones obvias\n\nSi tenés todos los datos, ejecutá directo\nEl usuario ya te pidió facturar, no necesita confirmar de nuevo\n\n❌ **NO olvides pedir la dirección cuando registres un cliente nuevo**\n\n❌ **NO olvides guardar la URL del PDF en \"Resumen Concepto\"**\n\n💡 EJEMPLOS DE INTERACCIÓN\nEjemplo 1: Facturación Express - Cliente Nuevo\nUsuario: \"Factura para María González, DNI TU_PASSWORD_CERTIFICADO5678, $3000, consulta médica, contado\"\nAgente:\n[Busca en Clientes → No encuentra]\n\"¿María González es monotributista, responsable inscripta o consumidor final? Y pasame la dirección completa (calle, número, ciudad).\"\nUsuario: \"Monotributista, Av. Corrientes TU_PASSWORD_CERTIFICADO, CABA\"\nAgente:\n[Registra cliente → Genera factura (AFIP) → Guarda URL en Resumen Concepto]\n\"Listo, factura generada por $3000 para María González (Condición: Contado).\"\n\nEjemplo 2: Cliente Existente\nUsuario: \"Factura para Pedro Martínez, $5000, honorarios profesionales\"\nAgente:\n[Busca en Clientes → Encuentra a Pedro]\n\"¿Cómo se paga? (Contado o Cta Cte)\"\nUsuario: \"Cta cte\"\nAgente:\n[Genera factura (AFIP) → Guarda URL en Resumen Concepto]\n\"Listo, factura generada por $5000 para Pedro Martínez (Condición: Cta Cte).\"\n\nEjemplo 3: Falta Información\nUsuario: \"Necesito una factura para un cliente nuevo\"\nAgente:\n\"Perfecto. ¿A nombre de quién hacemos la factura? Pasame el nombre, DNI/CUIT y la dirección.\"\n\n🎯 RESUMEN DE PRIORIDADES\n\nVelocidad: Minimizá preguntas\nPrecisión: Buscá antes de crear duplicados\nClaridad: Respondé de forma directa\nEficiencia: Si tenés los datos, ejecutá sin confirmar\n**Completitud: Siempre pedí la dirección para clientes nuevos**\n**Trazabilidad: Siempre guardá la URL del PDF en Resumen Concepto**\n\nRecordá: El usuario ya está validado. Tu único trabajo es procesar facturas y gestionar clientes de forma rápida y sin errores, usando la herramienta \"Profesionales\" para obtener la info del profesional, pidiendo SIEMPRE la dirección para clientes nuevos, y guardando la URL del PDF en Resumen Concepto."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        3904,
+        -2640
+      ],
+      "id": "fdce9862-8587-4e9f-96c1-37e4d6cece37",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "*"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -2864,
+        -2512
+      ],
+      "id": "8ef81a54-8fce-453c-b185-38491dcb3ffa",
+      "name": "Telegram Trigger",
+      "webhookId": "3d1140e3-39e2-4fb6-920d-8c76ef489806",
+      "credentials": {
+        "telegramApi": {
+          "id": "7nEevVhkpMLQrhtM",
+          "name": "Facturador"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "46f0478e-b455-401e-a333-a8c5ee2f435a",
+              "name": "chatImput",
+              "value": "={{ $json.mensaje }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -240,
+        -2544
+      ],
+      "id": "7ba8ba45-f2fb-4fef-9f6d-55d8e6c7a734",
+      "name": "Texto1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7d0121ae-0944-4b55-942d-2c8d95802cb1",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "defff9a3-c774-4659-9179-ac8be99a64c7",
+              "name": "nombre",
+              "value": "={{ $('Code1').item.json.nombre }}",
+              "type": "string"
+            },
+            {
+              "id": "7b33e79b-8fc4-46ac-944e-c2dfa235adad",
+              "name": "mensaje",
+              "value": "={{ $json.mensaje }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1056,
+        -2560
+      ],
+      "id": "42f3732d-dc50-475e-b55c-cbfb0d534ee7",
+      "name": "Entrada de datos"
+    },
+    {
+      "parameters": {
+        "amount": 3
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1744,
+        -2560
+      ],
+      "id": "a54c6c95-5626-41d8-8858-d3156343eed8",
+      "name": "Wait",
+      "webhookId": "9add9f90-6b5a-49c4-a773-1b0e21acab97"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "mensajes",
+        "key": "=pending:{{$json.id}}",
+        "keyType": "list",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        2032,
+        -2560
+      ],
+      "id": "52a22d01-eb1f-430b-a5d9-d34df20e49d7",
+      "name": "Recuperar mensajes",
+      "credentials": {
+        "redis": {
+          "id": "x88cOxPS4VJB7N0G",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4d449cd7-0278-44a9-8343-98fc3099cb6b",
+              "leftValue": "={{ $json.texto.includes('perfecto') }}\n",
+              "rightValue": "={{ $json.texto.length > 0 }}\n",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2704,
+        -2560
+      ],
+      "id": "e4144fb7-8d70-4dd0-b46c-04348cfddb0f",
+      "name": "If1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        3200,
+        -2464
+      ],
+      "id": "40880800-cdc6-47fb-b5e7-90e0d90c413e",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8982228d-0961-41a8-be8b-25ebf1274d28",
+              "name": "mensajes",
+              "value": "={{ $json.mensajes }}",
+              "type": "string"
+            },
+            {
+              "id": "05a52ee2-1b1d-44fa-b248-d8af0f31d27c",
+              "name": "id",
+              "value": "={{ $('Wait').item.json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3184,
+        -2640
+      ],
+      "id": "c4d6f7d3-d9e7-4140-9a6f-c85dbebe3973",
+      "name": "Juntar mensajes"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "key": "={{ $('Telegram Trigger').item.json.message.message_id }}{{ $('Telegram Trigger').item.json.message.text }}"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        5760,
+        -2592
+      ],
+      "id": "ddd97a66-9484-4c03-a706-8867ed49d0ed",
+      "name": "Redis",
+      "credentials": {
+        "redis": {
+          "id": "x88cOxPS4VJB7N0G",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "83bff4d0-9817-426e-8057-d6d9632518c6",
+              "leftValue": "={{ $json.texto && !$json.texto.startsWith(\"No puedo extraer información de la imagen proporcionada\") }}\n\n",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        144,
+        -2304
+      ],
+      "id": "a18a5118-5fac-4018-8bec-4a745a5b068e",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.mensaje }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        352,
+        -2192
+      ],
+      "id": "91474db1-5bf5-4551-8680-5638afef7fbf",
+      "name": "Send a text message1",
+      "webhookId": "d9489548-c7bd-4d6f-80c7-b6bf962c1e22",
+      "credentials": {
+        "telegramApi": {
+          "id": "fPfrpCrLlbE5zHX9",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d9a87b2e-d420-4b27-b661-e125b55102b8",
+              "name": "id",
+              "value": "={{ $json.id }}{{ $json.user_id }}\n};",
+              "type": "number"
+            },
+            {
+              "id": "346cb3f9-45db-4cf1-8ca0-8a538f918fb7",
+              "name": "nombre",
+              "value": "={{ $('Code1').item.json.nombre }}",
+              "type": "string"
+            },
+            {
+              "id": "05cc81ae-3f67-4a8b-8e23-d694ffbcc87e",
+              "name": "mensaje",
+              "value": "={{ $json.mensaje }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -432,
+        -2304
+      ],
+      "id": "69276829-f797-4ce1-b695-a688b2372e3d",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d9a87b2e-d420-4b27-b661-e125b55102b8",
+              "name": "id",
+              "value": "={{ $json.id }}{{ $json.user_id }}",
+              "type": "number"
+            },
+            {
+              "id": "346cb3f9-45db-4cf1-8ca0-8a538f918fb7",
+              "name": "nombre",
+              "value": "={{ $('Code1').item.json.nombre }}",
+              "type": "string"
+            },
+            {
+              "id": "05cc81ae-3f67-4a8b-8e23-d694ffbcc87e",
+              "name": "mensaje",
+              "value": "={{ $json.mensaje }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        64,
+        -2768
+      ],
+      "id": "734c7bbf-31cd-4c82-9033-1e7c92648376",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "TU_ID_DE_GOOGLE_SHEET",
+          "mode": "list",
+          "cachedResultName": "BD Facturación",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/TU_ID_DE_GOOGLE_SHEET/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 451546079,
+          "mode": "list",
+          "cachedResultName": "Clientes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/TU_ID_DE_GOOGLE_SHEET/edit#gid=451546079"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre y apellido": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Nombre_y_apellido', ``, 'string') }}",
+            "CUIT": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('CUIT', ``, 'string') }}",
+            "DNI": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('DNI', ``, 'string') }}",
+            "Categoria de IVA": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Categoria_de_IVA', ``, 'string') }}",
+            "Contacto": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Contacto', ``, 'string') }}",
+            "Fecha": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Fecha', ``, 'string') }}",
+            "Direccion ": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Direccion_', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "Nombre y apellido"
+          ],
+          "schema": [
+            {
+              "id": "Nombre y apellido",
+              "displayName": "Nombre y apellido",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "CUIT",
+              "displayName": "CUIT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DNI",
+              "displayName": "DNI",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Categoria de IVA",
+              "displayName": "Categoria de IVA",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Contacto",
+              "displayName": "Contacto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Direccion ",
+              "displayName": "Direccion ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        4672,
+        -2304
+      ],
+      "id": "31219bbb-7c61-45b7-8c2c-cd685de612a3",
+      "name": "Modificar Clientes",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ubIMqprwL7Haak5h",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "TU_ID_DE_GOOGLE_SHEET",
+          "mode": "list",
+          "cachedResultName": "BD Facturación",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/TU_ID_DE_GOOGLE_SHEET/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 918570089,
+          "mode": "list",
+          "cachedResultName": "FacturasGeneradas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/TU_ID_DE_GOOGLE_SHEET/edit#gid=918570089"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        4832,
+        -2304
+      ],
+      "id": "d367bde5-08a0-47de-8e54-270a2b00bf8b",
+      "name": "FacturasGeneradas",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ubIMqprwL7Haak5h",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "push",
+        "list": "=pending:{{$json.id}}",
+        "messageData": "={{ $json.mensaje }}",
+        "tail": true
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        1504,
+        -2560
+      ],
+      "id": "bd985d1b-53c8-4386-82fb-b57ed21ef369",
+      "name": "Redis1",
+      "credentials": {
+        "redis": {
+          "id": "x88cOxPS4VJB7N0G",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// 1. Obtener mensajes desde Redis (soportando variantes)\nconst raw =\n  $json.mensajes ??\n  $json.value ??\n  $json.data ??\n  [];\n\n// 2. Normalizar a array\nlet arr = [];\n\nif (Array.isArray(raw)) {\n  arr = raw;\n} else if (typeof raw === 'string') {\n  try {\n    const parsed = JSON.parse(raw);\n    if (Array.isArray(parsed)) arr = parsed;\n    else if (Array.isArray(parsed.mensajes)) arr = parsed.mensajes;\n  } catch (e) {\n    arr = [];\n  }\n} else if (raw?.mensajes && Array.isArray(raw.mensajes)) {\n  arr = raw.mensajes;\n}\n\n// 3. Limpiar mensajes\nconst mensajesFiltrados = arr\n  .filter(m => typeof m === 'string')\n  .map(m => m.trim())\n  .filter(m =>\n    m &&\n    !m.startsWith('/start') &&\n    !m.startsWith('/help')\n  );\n\n// 4. Unificar texto\nconst textoUnificado = mensajesFiltrados.join('\\n');\n\n// 5. Salida limpia para el Agent\nreturn {\n  chat_id: $json.id || $json.chat_id,\n  mensajes: mensajesFiltrados,\n  chatInput: textoUnificado,\n  cantidad: mensajesFiltrados.length\n};\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2240,
+        -2560
+      ],
+      "id": "c7ba2bf1-4ee2-4b62-a26d-892c2d6b65a7",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "Disculpe, no podemos procesar ese tipo de archivo. Por favor, intente nuevamente enviando solamente texto, audio o imágenes para continuar con la atención.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -1200,
+        -2160
+      ],
+      "id": "e39cd6d8-354a-4beb-bd02-f15ac60693a0",
+      "name": "Send a text message2",
+      "webhookId": "a0758581-e115-4509-915a-f003a1bc5d9a",
+      "credentials": {
+        "telegramApi": {
+          "id": "fPfrpCrLlbE5zHX9",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "TU_ID_DE_GOOGLE_SHEET",
+          "mode": "list",
+          "cachedResultName": "BD Facturación",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/TU_ID_DE_GOOGLE_SHEET/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 833019033,
+          "mode": "list",
+          "cachedResultName": "Profesionales",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/TU_ID_DE_GOOGLE_SHEET/edit#gid=833019033"
+        },
+        "options": {
+          "returnFirstMatch": false
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2592,
+        -2512
+      ],
+      "id": "1397c030-97d0-4710-8e86-12514cddf501",
+      "name": "Get row(s) in sheet",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ubIMqprwL7Haak5h",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.user_id }}",
+        "text": "=\"Hola 😊 No te tengo registrado. \nPodés hacerlo acá: https://n8ntest.goodappsautomation.com/webhook/Formulario?id={{ $json.user_id }}\"",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -1856,
+        -2368
+      ],
+      "id": "f10e5c8a-fda9-4037-9fba-ee949f5a6d40",
+      "name": "Send a text message3",
+      "webhookId": "f013af47-98aa-4cdc-876e-2dd443ce7d90",
+      "credentials": {
+        "telegramApi": {
+          "id": "7nEevVhkpMLQrhtM",
+          "name": "Facturador"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4b2b69fc-16fc-404a-9ace-d8f1eb3efbf3",
+              "leftValue": "={{ $json.registrado }}",
+              "rightValue": "True",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2080,
+        -2512
+      ],
+      "id": "ec513c72-ee5f-45d1-8c21-0bb1f3fbcc0b",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "TU_ID_DE_GOOGLE_SHEET",
+          "mode": "list",
+          "cachedResultName": "BD Facturación",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/TU_ID_DE_GOOGLE_SHEET/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 833019033,
+          "mode": "list",
+          "cachedResultName": "Profesionales",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/TU_ID_DE_GOOGLE_SHEET/edit#gid=833019033"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        4192,
+        -2304
+      ],
+      "id": "67b48e43-1662-4bea-a17c-62b13b156cf6",
+      "name": "Profesionales",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ubIMqprwL7Haak5h",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtener el texto de salida del agente\nconst item = $input.item.json;\nconst texto = item.output || item.salida || item.text || JSON.stringify(item);\n\n// Buscar cualquier URL de PDF\nconst urlMatch = texto.match(/https:\\/\\/[^\\s]+/);\n\nif (urlMatch) {\n  return {\n    json: {\n      url: urlMatch[0]\n    }\n  };\n} else {\n  // Si no encuentra URL, devolver el texto para debug\n  return {\n    json: {\n      error: 'No se encontró URL',\n      texto_recibido: texto\n    }\n  };\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5152,
+        -2784
+      ],
+      "id": "beaf376b-20be-48a6-b5b1-4e479819dd88",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "operation": "sendDocument",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "file": "={{ $json.url }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        5408,
+        -2784
+      ],
+      "id": "5597976d-2561-4ebd-a9ed-0fb9f9d43011",
+      "name": "Send a document",
+      "webhookId": "5a9f84ea-62e0-4b68-a910-b03dfbf4e0f9",
+      "credentials": {
+        "telegramApi": {
+          "id": "fPfrpCrLlbE5zHX9",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "67595e7e-10af-404c-af2f-25b7e5213881",
+              "leftValue": "={{ $json.output }}",
+              "rightValue": ".pdf",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        4384,
+        -2656
+      ],
+      "id": "eaf4c04d-027d-4489-aabf-5860f77fff40",
+      "name": "If3"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        5296,
+        -2464
+      ],
+      "id": "45ae7821-f2f1-4d41-8381-80c982ed27f1",
+      "name": "Send a text message",
+      "webhookId": "121d0a0d-5ab5-4419-90af-ff2f4f3f90b2",
+      "credentials": {
+        "telegramApi": {
+          "id": "fPfrpCrLlbE5zHX9",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "Listo su factura ya fue generada. Te comparto el archivo, si quieres hacer algun cambio no dudes en decirmelo 😉",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        5280,
+        -2656
+      ],
+      "id": "38ec7c85-9547-41f3-812c-5f42e46746ed",
+      "name": "Send a text message4",
+      "webhookId": "e5d3280d-bff7-436e-955e-9bcd94c68150",
+      "credentials": {
+        "telegramApi": {
+          "id": "fPfrpCrLlbE5zHX9",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Esta registrado?\n",
+        "height": 512,
+        "width": 1232,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2896,
+        -2704
+      ],
+      "id": "83ea08b1-96cb-4b05-aa00-0cc669891252",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Procesador del mensaje\n",
+        "height": 816,
+        "width": 2128,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1600,
+        -2800
+      ],
+      "id": "df43fa54-ae8c-4693-ba7f-d3b86a72c768",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Adjuntar mensjaes\n",
+        "height": 400,
+        "width": 2432,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        560,
+        -2688
+      ],
+      "id": "ac5ab081-938e-44c3-b80d-afb1a8f9fbbd",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Proceso del mensaje \n",
+        "height": 704,
+        "width": 1520,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        3040,
+        -2800
+      ],
+      "id": "99b832a2-6136-4857-8586-9d7bb16dd1d7",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Mensaje final\n",
+        "height": 640,
+        "width": 928,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        4608,
+        -2896
+      ],
+      "id": "f2e09aaf-2a4d-496e-b39b-6fce7504877d",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "jsCode": "const userId = $('Telegram Trigger').item.json.message.from.id;\nconst chatId = $('Telegram Trigger').item.json.message.chat.id;\nconst message = $('Telegram Trigger').item.json.message;\nconst profesionales = $('Get row(s) in sheet').all();\n\nconst existe = profesionales.some(row =>\n  String(row.json.ID_Telegram) === String(userId)\n);\n\n// Detectar tipo de mensaje y contenido\nlet tipoMensaje = 'texto';\nlet contenidoMensaje = '';\nlet fileId = '';\n\nif (message.text) {\n  tipoMensaje = 'texto';\n  contenidoMensaje = message.text;\n} else if (message.voice) {\n  tipoMensaje = 'audio';\n  fileId = message.voice.file_id;\n  contenidoMensaje = fileId;\n} else if (message.audio) {\n  tipoMensaje = 'audio';\n  fileId = message.audio.file_id;\n  contenidoMensaje = fileId;\n} else if (message.photo && message.photo.length > 0) {\n  tipoMensaje = 'imagen';\n  fileId = message.photo[message.photo.length - 1].file_id;\n  contenidoMensaje = fileId;\n} else if (message.document) {\n  tipoMensaje = 'documento';\n  fileId = message.document.file_id;\n  contenidoMensaje = fileId;\n}\n\nreturn {\n  json: {\n    registrado: existe,\n    user_id: userId,\n    chat_id: chatId,\n    mensaje: contenidoMensaje,\n    tipo_mensaje: tipoMensaje,\n    file_id: fileId,\n    id: userId,\n    identificacion: userId,\n    nombre: message.from.first_name || '',\n    apellido: message.from.last_name || '',\n    username: message.from.username || '',\n    nombre_de_usuario: message.from.username || ''\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2352,
+        -2512
+      ],
+      "id": "155a1897-cc6d-4d23-b73a-3b586e6cf8f8",
+      "name": "Code1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Transcribir Audio1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Audio1": {
+      "main": [
+        [
+          {
+            "node": "Get a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formato1": {
+      "main": [
+        [
+          {
+            "node": "Audio1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Texto1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get a file1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get text1": {
+      "main": [
+        [
+          {
+            "node": "Entrada de datos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analizar imagen2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get text4": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AFIP_Factura": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ResumenConceptos": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pendientes": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agregar en el resumen": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clientes": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agregar facturas": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agregar cliente": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file": {
+      "main": [
+        [
+          {
+            "node": "Transcribir Audio1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file1": {
+      "main": [
+        [
+          {
+            "node": "Analizar imagen2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Texto1": {
+      "main": [
+        [
+          {
+            "node": "get text1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Entrada de datos": {
+      "main": [
+        [
+          {
+            "node": "Redis1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Recuperar mensajes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recuperar mensajes": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Juntar mensajes",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Juntar mensajes": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "get text1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "get text4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "get text1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modificar Clientes": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FacturasGeneradas": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis": {
+      "main": [
+        []
+      ]
+    },
+    "Redis1": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Formato1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Profesionales": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "Send a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a document": {
+      "main": [
+        [
+          {
+            "node": "Redis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a text message4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message": {
+      "main": [
+        [
+          {
+            "node": "Redis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "07a7a9ac-da49-44f0-b93d-582dedb9de58",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5918e3353f91a836ba92cceb511cecf266624471bb1062fb025525a5b3db18fe"
+  },
+  "id": "eheH7ZA4THZq3cmu",
+  "tags": []
+}

@@ -1,0 +1,454 @@
+{
+  "name": "AFIP_Factura",
+  "nodes": [
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "38ad2b45-abff-469d-bab9-fbf946783d67",
+              "leftValue": "={{ $json.appServer }}",
+              "rightValue": "OK",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        256,
+        0
+      ],
+      "id": "a36561a8-d812-4c76-911d-a840c09530d1",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "url": "https://arca.goodapps.com.ar/api/AFIPDummy/Dummy",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        32,
+        0
+      ],
+      "id": "d04910a6-788f-4659-8784-2ab27ab13ae3",
+      "name": "HTTP Dummy"
+    },
+    {
+      "parameters": {
+        "inputSource": "jsonExample",
+        "jsonExample": "{\n  \"accion\": \"Crear Factura\",\n  \"nombre_profesional\": \"Maximiliano Cuassolo\",\n  \"cuit_profesional\": \"20000000001\",\n  \"categoria_iva\": \"Responsable Inscripto\",\n  \"Direccion_profesional\": \"Calle Ejemplo 123\",\n  \"iibb_profesional\": \"20000000001\",\n  \"inicio_actividades\": \"09/01/2017\",\n  \n  \"nombre_cliente\": \"Sofia Reyes\",\n  \"cuit_Cliente\": \"459832548\",\n  \"categoria_iva_cliente\": \"Consumidor Final\",\n  \"direccion_cliente\": \"Domicilio Cliente 123\",\n  \"condicion_venta\": \"Contado\",\n\n  \"punto_venta\": 2,\n  \"monto\": 1000, \n  \"concepto\": \"desarrollo\",\n  \"carpeta\": \"GoodApps\",\n  \"archivo\": \"goodapps.p12\"\n}"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -176,
+        0
+      ],
+      "id": "9cbbfd91-b676-4f10-9785-c73e50fa73fe",
+      "name": "When Executed by Another Workflow",
+      "alwaysOutputData": false,
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=nombre_profesional: {{ $('When Executed by Another Workflow').item.json.nombre_profesional }}\ncuit_profesional: {{ $('When Executed by Another Workflow').item.json.cuit_profesional }}\nCategoria_iva_emisor: {{ $('When Executed by Another Workflow').item.json.categoria_iva }}\ndireccion_profesional:{{ $('When Executed by Another Workflow').item.json.Direccion_profesional }}\niibb_profesional: {{ $('When Executed by Another Workflow').item.json.iibb_profesional }}\ninicio_actividad: {{ $('When Executed by Another Workflow').item.json.inicio_actividades }}\ncondicion_venta: {{ $('When Executed by Another Workflow').item.json.condicion_venta }}\nnombre_cliente:{{ $('When Executed by Another Workflow').item.json.nombre_cliente }}\ncuit_cliente: {{ $('When Executed by Another Workflow').item.json.cuit_Cliente }}\ndireccion_cliente: {{ $('When Executed by Another Workflow').item.json.direccion_cliente }}\ncategoria_cliente: {{ $('When Executed by Another Workflow').item.json.categoria_iva_cliente }}\npunto_venta: {{ $('When Executed by Another Workflow').item.json.punto_venta}}\nmonto:{{ $('When Executed by Another Workflow').item.json.monto }}\ncarpeta:{{ $('When Executed by Another Workflow').item.json.carpeta }}\nconcepto: {{ $('When Executed by Another Workflow').item.json.concepto }}\narchivo:{{ $('When Executed by Another Workflow').item.json.archivo }}",
+        "options": {
+          "systemMessage": "=Eres un asistente técnico de procesamiento de datos.\nTu ÚNICA tarea es recibir datos de facturación y devolver un JSON limpio y válido.\n\nREGLAS:\n1. NO inventes datos. Usa EXACTAMENTE los valores recibidos.\n2. Incluye SIEMPRE archivo y carpeta.\n3. SOLO devuelve un objeto JSON.\n4. Incluye SIEMPRE el campo tipoComprobante usando:\n    A → 1\n    B → 6\n    C → 11\n5. El campo tipoFactura debe ser: \"A\" | \"B\" | \"C\".\n\nFORMATO DE SALIDA (OBLIGATORIO):\n\n{\n  \"cliente\": \"string\",\n  \"cuit_o_dni\": \"string\",\n  \"direccion_cliente\": \"string\",\n  \"concepto\": \"string\",\n  \"monto\": número,\n  \"categoriaIVA_cliente\": \"string\",\n  \"categoriaIVA_emisor\": \"string\",\n  \"tipoFactura\": \"A\" | \"B\" | \"C\",\n  \"tipoComprobante\": número,\n  \"fecha\": \"YYYY-MM-DD\",\n  \"cuit_profesional\": \"string\",\n  \"direccion_profesional\" : \"string\"\n  \"archivo\": \"string\",\n  \"carpeta\": \"string\",\n  \"punto_de_venta\": \"string\"\n}\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        592,
+        -16
+      ],
+      "id": "df66d89b-c3b2-45ff-bf77-ff763ab71dec",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        592,
+        208
+      ],
+      "id": "1d5cc1c8-1c0b-42f8-80e0-f9dc6587d03a",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "n9uyI4VfRzBF9m5N",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// ======================================================\n// 1. OBTENER INPUT (desde sub-workflow o input directo)\n// ======================================================\nlet input = {};\ntry {\n    input = $('When Executed by Another Workflow').first().json;\n} catch (e) {\n    input = $input.first().json;\n}\n\n// ======================================================\n// 2. DATOS EMPRESA\n// ======================================================\nconst datosEmpresa = {\n    razon_social_profesional: input.nombre_profesional,\n    direccion_profesional: input.Direccion_profesional,\n    iibb_profesional: input.iibb_profesional,\n    inicio_actividades: input.inicio_actividades,\n    condicion_iva_profesional: input.categoria_iva,\n    cuit_profesional: input.cuit_profesional,\n    punto_de_venta: Number(input.punto_venta || 2),\n    logo_url: \"\"\n};\n\n// ======================================================\n// 3. DATOS CLIENTE\n// ======================================================\nconst datosCliente = {\n    cliente: input.nombre_cliente || \"Consumidor Final\",\n    cuit_o_dni: input.cuit_Cliente || \"0\",\n    condicion_iva_cliente: input.categoria_iva_cliente || \"Consumidor Final\",\n    direccion_cliente: input.direccion_cliente || \"Domicilio no informado\",\n    condicion_venta: input.condicion_venta || \"Contado\"\n};\n\n// ======================================================\n// 4. TIPO DE COMPROBANTE\n// ======================================================\nlet cbteTipo = 6; // Factura B por defecto\nif (String(datosCliente.condicion_iva_cliente).toLowerCase().includes('inscripto')) {\n    cbteTipo = 1; // Factura A\n}\n\nconst esFacturaA = cbteTipo === 1;\n\n// ======================================================\n// 5. DOCUMENTO RECEPTOR\n// ======================================================\nlet docTipo = 99;\nlet docNro = 0;\n\nconst rawDoc = String(datosCliente.cuit_o_dni).replace(/\\D/g, '');\n\nif (rawDoc.length === 11) {\n    docTipo = 80; // CUIT\n    docNro = Number(rawDoc);\n} else if (rawDoc.length >= 7) {\n    docTipo = 96; // DNI\n    docNro = Number(rawDoc);\n}\n\n// Validación obligatoria Factura A\nif (esFacturaA && docTipo !== 80) {\n    throw new Error('Factura A requiere CUIT del cliente');\n}\n\n// ======================================================\n// 6. CÁLCULOS DE IMPORTES\n// ======================================================\nconst TASA_IVA = 0.21;\n\nlet impNeto = 0;\nlet impIVA = 0;\nlet impTotal = 0;\n\nconst montoInput = parseFloat(input.monto || 0);\n\nif (esFacturaA) {\n    // Factura A → el monto es NETO\n    impNeto = montoInput;\n    impIVA = parseFloat((impNeto * TASA_IVA).toFixed(2));\n    impTotal = parseFloat((impNeto + impIVA).toFixed(2));\n} else {\n    // Factura B → el monto es TOTAL\n    impTotal = montoInput;\n    impNeto = parseFloat((impTotal / (1 + TASA_IVA)).toFixed(2));\n    impIVA = parseFloat((impTotal - impNeto).toFixed(2));\n}\n\n// ======================================================\n// 7. IVA (solo cuando corresponde)\n// ======================================================\nlet ivaArray = [];\n\nif (impIVA > 0) {\n    ivaArray = [{\n        Id: 5,           // 21%\n        BaseImp: impNeto,\n        Importe: impIVA\n    }];\n}\n\n// ======================================================\n// 8. CONDICIÓN IVA RECEPTOR\n// ======================================================\nlet condicionIVAReceptorId = 5; // Consumidor Final\n\nif (esFacturaA) {\n    condicionIVAReceptorId = 1; // Responsable Inscripto\n}\n\n// ======================================================\n// 9. FECHA AFIP\n// ======================================================\nconst fechaAFIP = new Date().toISOString().slice(0, 10).replace(/-/g, \"\");\n\n// ======================================================\n// 10. SALIDA FINAL\n// ======================================================\nreturn [{\n    json: {\n        // PDF\n        ...datosEmpresa,\n        ...datosCliente,\n        concepto_descripcion: input.concepto || \"Servicios\",\n        impNeto,\n        impIVA,\n        impTotal,\n        fecha: fechaAFIP,\n\n        // Certificado\n        ticket_payload: {\n            isProdEnvironment: true,\n            service: 'wsfe',\n            cuit: datosEmpresa.cuit_profesional,\n            fileName: input.archivo || 'goodapps.p12',\n            folderFile: input.carpeta || 'GoodApps',\n            password: '1234'\n        },\n\n        // AFIP\n        wsfe_payload: {\n            auth: {\n                token: $('Obtener tiket').first().json.token,\n                sign: $('Obtener tiket').first().json.sign,\n                cuitRepresentada: datosEmpresa.cuit_profesional\n            },\n            feCAERequest: {\n                feCabReq: {\n                    CantReg: 1,\n                    PtoVta: datosEmpresa.punto_de_venta,\n                    CbteTipo: cbteTipo\n                },\n                feDetReq: [{\n                    Concepto: 2,\n                    DocTipo: docTipo,\n                    DocNro: docNro,\n                    CbteDesde: 0,\n                    CbteHasta: 0,\n                    CbteFch: fechaAFIP,\n\n                    ImpTotal: impTotal,\n                    ImpTotConc: 0,\n                    ImpNeto: impNeto,\n                    ImpOpEx: 0,\n                    ImpTrib: 0,\n                    ImpIVA: impIVA,\n\n                    FchServDesde: fechaAFIP,\n                    FchServHasta: fechaAFIP,\n                    FchVtoPago: fechaAFIP,\n\n                    MonId: 'PES',\n                    MonCotiz: 1,\n\n                    condicionIVAReceptorId,\n                    Iva: ivaArray\n                }]\n            }\n        }\n    }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1424,
+        -16
+      ],
+      "id": "f6fafd87-15ce-44e8-9a3c-ba8a6662a82b",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://arca.goodapps.com.ar/api/AFIPTicket/Ticket",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": " application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"service\": \"wsfe\",\n  \"password\": \"1234\",\n  \"verbose\": true,\n  \"fileName\": \"goodapps.p12\",\n  \"folderFile\": \"GoodApps\",\n  \"cuit\": {{ $('When Executed by Another Workflow').item.json.cuit_profesional }}\n\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        896,
+        -16
+      ],
+      "id": "6e35db3d-2980-4e2b-b829-18c90cadbeaf",
+      "name": "Obtener tiket"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://arca.goodapps.com.ar/api/AFIPInvoice/GetInvoiceNumber",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "ptoVta",
+              "value": "={{ $json.punto_venta }}"
+            },
+            {
+              "name": "cbteTipo",
+              "value": "={{ $json.cbteTipo }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"token\": \"{{ $json.token }}\",\n  \"sign\": \"{{ $json.sign }}\",\n  \"cuitRepresentada\": \"{{ $json.cuit_profesional_limpio }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1248,
+        -16
+      ],
+      "id": "99bdae9f-c300-4f21-b1d9-d75945b67803",
+      "name": "HTTP Get Inovice"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://arca.goodapps.com.ar/api/AFIPInvoice/CreateInvoice",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $('Code').item.json.wsfe_payload }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1600,
+        -16
+      ],
+      "id": "d0e0d99c-9e2a-4647-9d39-b23cd0d403ab",
+      "name": "Crear inovice"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ===============================\n// 1. DATOS DE ENTRADA\n// ===============================\nconst afip = items[0].json || {};\nconst cab = afip.feCabResp || {};\nconst det = afip.feDetResp ? afip.feDetResp[0] : {};\nconst datos = $('Code').first()?.json || {};\n\n// ===============================\n// 2. HELPERS\n// ===============================\nconst n = v => v ?? '-';\n\nfunction fmtMoney(v) {\n  return new Intl.NumberFormat('es-AR', {\n    minimumFractionDigits: 2,\n    maximumFractionDigits: 2\n  }).format(Number(v || 0));\n}\n\nfunction fmtFecha(f) {\n  if (!f) return '-';\n  const s = f.toString();\n  return s.length === 8\n    ? `${s.slice(6,8)}/${s.slice(4,6)}/${s.slice(0,4)}`\n    : s;\n}\n\nfunction numeroALetras(num) {\n  const entero = Math.floor(num);\n  const decimales = Math.round((num - entero) * 100);\n  return `${entero.toLocaleString('es-AR').toUpperCase()} PESOS CON ${decimales}/100`;\n}\n\n// ===============================\n// 3. LETRA COMPROBANTE\n// ===============================\nlet letra = 'B';\nlet cod = '006';\nif (cab.cbteTipo === 1) { letra = 'A'; cod = '001'; }\nif (cab.cbteTipo === 11) { letra = 'C'; cod = '011'; }\n\n// ===============================\n// 4. IMPORTES\n// ===============================\nconst neto  = Number(datos.impNeto || 0);\nconst iva   = Number(datos.impIVA || 0);\nconst total = Number(datos.impTotal || 0);\n\n// ===============================\n// 5. QR AFIP\n// ===============================\nconst qrData = {\n  ver: 1,\n  fecha: String(fmtFecha(det.cbteFch)),\n  cuit: Number(datos.cuit_profesional || ''),\n  ptoVta: Number(cab.ptoVta || 0),\n  tipoCmp: Number(cab.cbteTipo || 0),\n  nroCmp: Number(det.cbteDesde || 0),\n  importe: total,\n  moneda: 'ARS',\n  ctz: 1,\n  tipoDocRec: Number(det.docTipo || 0),\n  nroDocRec: Number(det.docNro || 0),\n  tipoCodAut: 'E',\n  codAut: Number (det.cae || 0)\n};\n\nconst qrText = 'https://www.afip.gob.ar/fe/qr/?p=' + Buffer.from(JSON.stringify(qrData)).toString('base64');\n\n// ===============================\n// 6. BLOQUE FACTURA\n// ===============================\nfunction bloqueFactura(tipo) {\nreturn `\n<div class=\"factura\">\n\n<div class=\"tipo-copia\">${tipo}</div>\n\n<div class=\"factura-header\">\n  \n  <div class=\"header-col izq\">\n    \n    <div class=\"nombre-principal\">\n        ${n(datos.razon_social_profesional)}\n    </div>\n\n    <p><strong>Razón Social:</strong> ${n(datos.razon_social_profesional)}</p>\n    <p><strong>Domicilio Comercial:</strong> ${n(datos.direccion_profesional)}</p>\n    <p><strong>Condición Frente al IVA:</strong> ${n(datos.condicion_iva_profesional)}</p>\n  </div>\n\n  <div class=\"header-col centro\">\n    <div class=\"cuadro-letra\">\n      <div class=\"letra\">${letra}</div>\n      <div class=\"codigo\">COD. ${cod}</div>\n    </div>\n  </div>\n\n  <div class=\"header-col der\">\n    <p class=\"titulo-doc\">FACTURA VENTA</p>\n    <p><strong>Punto de Venta:</strong> ${String(cab.ptoVta).padStart(4,'0')} <strong>Comp. Nro:</strong> ${String(det.cbteDesde).padStart(8,'0')}</p>\n    <p><strong>Fecha de Emisión:</strong> ${fmtFecha(det.cbteFch)}</p>\n    <p><strong>CUIT:</strong> ${n(datos.cuit_profesional)}</p>\n    <p><strong>Ingresos Brutos:</strong> ${n(datos.ingresos_brutos || 'INSCRIPTO EN CM')}</p>\n    <p><strong>Fecha de Inicio de Actividades:</strong> ${fmtFecha(datos.fecha_inicio_actividades || '20170109')}</p>\n  </div>\n</div>\n\n<div class=\"periodo-linea\">\n  <span><strong>Período Facturado Desde:</strong> ${fmtFecha(datos.periodo_desde || det.cbteFch)}</span>\n  <span><strong>Hasta:</strong> ${fmtFecha(datos.periodo_hasta || det.cbteFch)}</span>\n  <span><strong>Fecha de Vto. para el pago:</strong> ${fmtFecha(datos.fecha_vto || det.cbteFch)}</span>\n</div>\n\n<div class=\"cliente-box\">\n  <p><strong>Condición de Venta:</strong> ${n(datos.condicion_venta || 'CTA CTE')}</p>\n  <p><strong>CUIT:</strong> ${n(det.docNro)}</p>\n  <p><strong>Condición frente al IVA:</strong> ${n(datos.condicion_iva_cliente)}</p>\n  <p><strong>Apellido y Nombre/Razón Social:</strong> ${n(datos.cliente)}</p>\n  <p><strong>Domicilio:</strong> ${n(datos.direccion_cliente)}</p>\n</div>\n\n<table class=\"items-table\">\n<thead>\n<tr>\n<th style=\"width:50px;\">Código</th>\n<th>Producto / Servicio</th>\n<th style=\"width:45px;\">Cant.</th>\n<th style=\"width:60px;\">U. Medida</th>\n<th style=\"width:75px;\">Precio Unit.</th>\n<th style=\"width:50px;\">% Bonif.</th>\n<th style=\"width:80px;\">SubTotal</th>\n<th style=\"width:60px;\">Alícuota<br>IVA</th>\n<th style=\"width:90px;\">SubTotal<br>c/IVA</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td class=\"center\">143</td>\n<td class=\"descripcion\">${n(datos.concepto_descripcion)}</td>\n<td class=\"center\">1</td>\n<td class=\"center\">UNIDAD</td>\n<td class=\"right\">${fmtMoney(neto)}</td>\n<td class=\"center\">0,00</td>\n<td class=\"right\">${fmtMoney(neto)}</td>\n<td class=\"center\">21,00</td>\n<td class=\"right\">${fmtMoney(total)}</td>\n</tr>\n</tbody>\n</table>\n\n<div class=\"obs-box\">\n  <strong>Observaciones:</strong><br>\n  ${n(datos.observaciones)}\n</div>\n\n<div class=\"nota-pie\">\n    La factura por los servicios prestados deberá ser abonada antes de la fecha de vencimiento indicada. La obligación se entenderá \n    cancelada únicamente cuando se abone el importe total del precio antes de su vencimiento, o luego de su vencimiento con los \n    intereses correspondientes. El pago total o parcial fuera de término producirá intereses diarios de manera automática y sin necesidad \n    de interpelación previa.\n</div>\n\n<div class=\"footer-section\">\n\n    <div class=\"qr-col\">\n        <div class=\"qr-afip\">\n             <img src=\"https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(qrText)}\"\n             width=\"100\" height=\"100\" alt=\"QR AFIP\">\n             \n        <img src=\"data:image/jpeg;base64,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\" alt=\"ARCA\" class=\"logo-afip\" />\n\n        </div>\n    </div>\n\n    <div class=\"totales-col\">\n        <div class=\"fila-importe\">\n            <span class=\"label\">Importe Neto Gravado: $</span>\n            <span class=\"monto\">${fmtMoney(neto)}</span>\n        </div>\n        <div class=\"fila-importe\">\n            <span class=\"label\">Importe Otros Tributos: $</span>\n            <span class=\"monto\">0,00</span>\n        </div>\n        <div class=\"fila-importe\">\n            <span class=\"label\">IVA: $</span>\n            <span class=\"monto\">${fmtMoney(iva)}</span>\n        </div>\n        <div class=\"fila-importe total-final\">\n            <span class=\"label\">Importe Total: $</span>\n            <span class=\"monto\">${fmtMoney(total)}</span>\n        </div>\n\n        <div class=\"fila-son\">\n            SON: ${numeroALetras(total)}\n        </div>\n\n        <div class=\"datos-cae\">\n            CAE N°: ${n(det.cae)}<br>\n            Vto de CAE: ${fmtFecha(det.caeFchVto)}\n        </div>\n    </div>\n\n</div>\n\n</div> `;\n}\n\n// ===============================\n// 7. HTML FINAL\n// ===============================\nconst html = `\n<!DOCTYPE html>\n<html lang=\"es\">\n<head>\n<meta charset=\"UTF-8\">\n<style>\n@page {\n  size: A4;\n  margin: 10mm;\n}\n\n* { margin: 0; padding: 0; box-sizing: border-box; }\nbody { \n  font-family: Arial, Helvetica, sans-serif;\n  font-size: 11pt;   \n  /* font-weight: bold; */ /* <--- QUITE ESTA LÍNEA (Esto quitó la gordura general) */\n  line-height: 1.4; \n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\n\n.tipo-copia { \n  text-align: center;\n  font-weight: bold; \n  font-size: 10px;\n  margin-bottom: 6px;\n}\n\n.factura-header {\n  display: table;\n  width: 100%;\n  border: 2px solid #000;\n  margin-bottom: 6pt;\n  table-layout: fixed;\n}\n\n.header-col {\n  display: table-cell;\n  padding: 6pt 8pt;\n  font-size: 10px;\n  line-height: 1.3;\n  vertical-align: top;\n}\n\n.header-col.izq {\n  border-right: 2px solid #000;\n  width: 40%;\n}\n\n/* ========================================= */\n/* TÍTULO PRINCIPAL (La Colonial style) */\n/* ========================================= */\n.nombre-principal {\n  font-size: 14pt;      \n  font-weight: bold;    /* <--- Antes era 900 (muy gorda), ahora es normal bold */\n  text-align: center;   \n  margin-bottom: 8px;   \n  text-transform: uppercase; \n}\n/* ========================================= */\n\n.header-col.centro {\n  width: 20%;\n  text-align: center;\n  border-right: 2px solid #000;\n  position: relative;\n}\n\n.header-col.der {\n  width: 40%;\n}\n\n.razon-social {\n  font-weight: bold;\n}\n\n.header-col p {\n  margin: 1px 0;\n  font-size: 10px; \n}\n\n.cuadro-letra { \n  width: 80px;\n  height: 80px;\n  border: 3px solid #000;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n}\n\n.letra {\n  font-size: 32pt;\n  font-weight: bold;\n  line-height: 1;\n}\n\n.codigo { \n  font-size: 7px;\n  margin-top: 1px;\n}\n\n.titulo-doc {\n  font-size: 13pt;\n  font-weight: bold;\n  margin-bottom: 4pt;\n}\n\n.periodo-linea { \n  display: flex;\n  justify-content: space-between;\n  padding: 3px 5px;\n  background: #f5f5f5;\n  border: 1px solid #000;\n  margin-bottom: 5px;\n  font-size: 10px;\n}\n\n.cliente-box {\n  border: 1px solid #000;\n  padding: 4px 5px;\n  margin-bottom: 5px;\n}\n\n.cliente-box p {\n  margin: 1px 0;\n  font-size: 10px;\n  line-height: 1.3;\n}\n\n.items-table { \n  width: 100%;\n  border-collapse: collapse;\n  margin-bottom: 5px;\n}\n\n.items-table th {\n  background: #e8e8e8;\n  border: 1px solid #000;\n  padding: 3px 2px;\n  font-size: 9px;\n  font-weight: bold;\n  text-align: center;\n  line-height: 1.1;\n}\n\n.items-table td {\n  border: 1px solid #000;\n  padding: 3px 2px;\n  font-size: 9px;\n  vertical-align: top;\n}\n\n.items-table td.descripcion {\n  text-align: left;\n  line-height: 1.2;\n  font-size: 9px;\n}\n\n.items-table td.center {\n  text-align: center;\n}\n\n.items-table td.right {\n  text-align: right;\n}\n\n.obs-box { \n  border: 1px solid #000;\n  padding: 5px;\n  min-height: 450px; \n  margin-bottom: 6px;\n  font-size: 10px;\n}\n.obs-box strong {\n  font-size: 10px;\n}\n\n.nota-pie {\n  border: 1px solid #000;\n  padding: 6px 8px;\n  margin-top: 10mm;   \n  margin-bottom: 5px; \n  font-size: 10px;    \n  font-weight: bold;  \n  line-height: 1.4;\n  text-align: justify;\n  page-break-inside: avoid;\n}\n\n\n.footer-section {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: flex-start;\n  width: 100%;\n  page-break-inside: avoid;\n}\n\n.qr-col {\n  width: 45%;          /* Aumentamos el ancho para que entren ambos cómodos */\n  display: flex;\n  justify-content: flex-start;\n}\n\n.qr-afip {\n  display: flex;\n  flex-direction: row; /* Esto los pone uno al lado del otro */\n  align-items: center; /* Los alinea al centro verticalmente */\n  gap: 15px;           /* Espacio entre el QR y el Logo */\n}\n\n.logo-afip {\n  width: 130px;        /* Tamaño sugerido para que se vea claro */\n  height: auto;\n  margin: 0;           /* Quitamos el margen superior para que no se desfase */\n}\n.totales-col { \n  width: 65%;\n  display: flex;\n  flex-direction: column;\n  align-items: flex-end; \n  font-size: 10px; \n  gap: 2px;\n}\n\n.fila-importe {\n  display: flex;\n  justify-content: flex-end;\n  width: 100%;\n  gap: 15px; \n}\n\n.monto {\n  width: 90px; \n  text-align: right;\n}\n\n.fila-importe.total-final {\n  font-weight: bold;\n  font-size: 11px;\n  margin-top: 2px;\n}\n\n.fila-son {\n  text-align: right;\n  font-weight: bold;\n  font-size: 9px;\n  margin-top: 4px;\n  margin-bottom: 2px;\n  width: 100%;\n  border-top: 1px solid #ccc;\n  padding-top: 2px;\n}\n\n.datos-cae {\n  text-align: right;\n  font-weight: bold;\n  font-size: 10px;\n  line-height: 1.4;\n}\n\n.factura {\n  width: 210mm;\n  padding: 6mm;\n  border: 1px solid #000;\n  page-break-after: always;\n}\n\n@media print {\n  .factura {\n    width: 210mm;\n    padding: 6mm;\n    border: 1px solid #000;\n    page-break-after: always;\n  }\n}\n</style>\n</head>\n<body>\n\n${bloqueFactura('ORIGINAL')}\n${bloqueFactura('DUPLICADO')}\n\n</body>\n</html>\n`;\n\nreturn [{ json: { html_generado: html } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1776,
+        -16
+      ],
+      "id": "2e689ca4-95e4-4492-a1e9-40d7d56f5469",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "operation": "URL/HTML to PDF",
+        "convertType": "htmlToPDF",
+        "html": "={{ $json.html_generado }}",
+        "advancedOptions": {
+          "name": "Factura ARCA"
+        }
+      },
+      "type": "n8n-nodes-pdfco.PDFco Api",
+      "typeVersion": 1,
+      "position": [
+        1952,
+        -16
+      ],
+      "id": "3865e57b-2f0a-43fc-b5f3-27b6c9612068",
+      "name": "PDFco Api",
+      "credentials": {
+        "pdfcoApi": {
+          "id": "qqWBfxtzGl9XujTr",
+          "name": "PDF.co account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2112,
+        -16
+      ],
+      "id": "3debed85-a200-437d-85fe-143637d5444b",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ======================================================\n// 1. OBTENER INPUT\n// ======================================================\nlet input = {};\ntry {\n  input = $('When Executed by Another Workflow').first().json;\n} catch (e) {\n  input = $input.first().json;\n}\n\n// ======================================================\n// 2. TOKEN LIMPIO\n// ======================================================\nconst tokenData = $('Obtener tiket').first().json;\n\nconst tokenLimpio = String(tokenData.token || '')\n  .trim()\n  .replace(/\\s+/g, '');\n\nconst signLimpio = String(tokenData.sign || '')\n  .trim()\n  .replace(/\\s+/g, '');\n\n// ======================================================\n// 3. TIPO DE COMPROBANTE\n// ======================================================\nconst emisorRI = String(input.categoria_iva || '')\n  .toLowerCase()\n  .includes('inscripto');\n\nconst clienteRI = String(input.categoria_iva_cliente || '')\n  .toLowerCase()\n  .includes('inscripto');\n\nlet cbteTipo = 11; // Factura C por defecto\n\nif (emisorRI && clienteRI) {\n  cbteTipo = 1; // Factura A\n} else if (emisorRI && !clienteRI) {\n  cbteTipo = 6; // Factura B\n}\n\n// ======================================================\n// 4. LIMPIAR CUIT EMISOR\n// ======================================================\nconst cuitProfesionalLimpio = Number(\n  String(input.cuit_profesional || '').replace(/\\D/g, '')\n);\n\n// ======================================================\n// 5. LIMPIAR CUIT CLIENTE (DEL AGENTE O DEL INPUT)\n// ======================================================\n// El agente puede devolverlo como:\n// - cuit_cliente\n// - cuitCliente\n// - cuit\n// - dentro de un texto\nlet cuitClienteRaw =\n  input.cuit_cliente ??\n  input.cuitCliente ??\n  input.cuit ??\n  '';\n\n// Si viene embebido en texto, sacamos solo números\nconst cuitClienteLimpio = Number(\n  String(cuitClienteRaw).replace(/\\D/g, '')\n);\n\n// ======================================================\n// 6. VALIDACIÓN CLARA (evita AFIP 500)\n// ======================================================\nif (cbteTipo === 1) {\n  if (!cuitClienteLimpio || String(cuitClienteLimpio).length !== 11) {\n    throw new Error('Factura A requiere CUIT válido del cliente');\n  }\n}\n\n// ======================================================\n// 7. RETURN\n// ======================================================\nreturn [{\n  json: {\n    ...input,\n\n    // AFIP\n    cbteTipo,\n    punto_venta: Number(input.punto_venta || 2),\n\n    // CUITs LIMPIOS\n    cuit_profesional_limpio: cuitProfesionalLimpio,\n    cuit_cliente_limpio: cuitClienteLimpio,\n\n    // Tokens\n    token: tokenLimpio,\n    sign: signLimpio\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1088,
+        -16
+      ],
+      "id": "3a189553-e946-4b71-b1d3-143101886975",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "content": "## Flujo de facturación\n",
+        "height": 480,
+        "width": 2816,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -368,
+        -112
+      ],
+      "id": "8440f877-ec96-43af-ac65-257ac6cada96",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "If": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Dummy": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "HTTP Dummy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Obtener tiket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Crear inovice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener tiket": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Get Inovice": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear inovice": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "PDFco Api",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PDFco Api": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        []
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Get Inovice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c963bd5b-63ac-4cbb-83f2-b41c2ed5fefc",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5918e3353f91a836ba92cceb511cecf266624471bb1062fb025525a5b3db18fe"
+  },
+  "id": "WrQBnTSo3APCFB7Z",
+  "tags": []
+}

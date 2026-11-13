@@ -1,0 +1,571 @@
+{
+  "name": "Registrar Profesional",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "Formulario",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        32,
+        -80
+      ],
+      "id": "aa73ab0c-da20-4e79-b395-690eb8203ae1",
+      "name": "Webhook",
+      "webhookId": "9185227c-d8c0-4150-9b0d-e8ddee467099"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.html }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        480,
+        -80
+      ],
+      "id": "638c569b-5b6b-4c78-b507-bbb58097b91a",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "guardar-datos",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        16,
+        304
+      ],
+      "id": "0ec1126e-4334-4a18-bff0-d7b2798e3207",
+      "name": "Webhook1",
+      "webhookId": "f4210719-1eae-4bee-bab4-a9d4c1be2603"
+    },
+    {
+      "parameters": {
+        "content": "## Formulario\n",
+        "height": 240,
+        "width": 784
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -144
+      ],
+      "id": "3bc06847-903c-4642-8ddd-799c2b6c926e",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "html": "<!DOCTYPE html>\n<html lang=\"es\">\n<head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n    <title>Registro de Profesional</title>\n    <style>\n        /* Estilos Base */\n        body { margin: 0; padding: 20px; background: #f4f7f6; font-family: 'Segoe UI', Arial, sans-serif; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; }\n        .card { background: #ffffff; padding: 30px; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.08); width: 100%; max-width: 500px; transition: all 0.3s ease; }\n        h2 { text-align: center; margin-top: 0; color: #1a1a1a; font-weight: 700; }\n        \n        /* Formulario */\n        label { font-size: 13px; display: block; margin-top: 15px; margin-bottom: 5px; color: #555; font-weight: 600; }\n        input, select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-size: 14px; box-sizing: border-box; transition: border 0.3s; }\n        input:focus { outline: none; border-color: #007bff; box-shadow: 0 0 0 3px rgba(0,123,255,0.1); }\n        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }\n\n        /* Botón y Spinner */\n        #btnSubmit { margin-top: 25px; width: 100%; padding: 14px; background: #007bff; color: white; border: none; border-radius: 10px; font-size: 16px; cursor: pointer; font-weight: bold; display: flex; justify-content: center; align-items: center; }\n        #btnSubmit:disabled { background: #a0c4ff; cursor: not-allowed; }\n\n        .loader {\n            border: 3px solid #f3f3f3;\n            border-top: 3px solid #ffffff;\n            border-radius: 50%;\n            width: 18px;\n            height: 18px;\n            animation: spin 1s linear infinite;\n            display: none; /* Oculto por defecto */\n            margin-left: 10px;\n        }\n\n        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }\n\n        /* Pantalla de Éxito */\n        #success-container { display: none; text-align: center; padding: 20px; }\n        .icon-check { font-size: 60px; color: #28a745; margin-bottom: 20px; }\n        .btn-salir { background-color: #0088cc; color: white; border: none; padding: 14px; border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 20px; width: 100%; }\n    </style>\n</head>\n<body>\n\n    <div class=\"card\" id=\"form-container\">\n        <h2>Registro Fiscal</h2>\n        <form id=\"registroForm\">\n            <input type=\"hidden\" name=\"ID_Telegram\" value=\"{{ $json.query.id }}\" />\n\n            <div class=\"grid\">\n                <div><label>Nombre *</label><input type=\"text\" name=\"Nombre\" required /></div>\n                <div><label>Apellido *</label><input type=\"text\" name=\"Apellido\" required /></div>\n            </div>\n\n            <label>Razón Social *</label>\n            <input type=\"text\" name=\"RazonSocial\" placeholder=\"Ej: Juan Perez S.H.\" required />\n\n            <div class=\"grid\">\n                <div>\n                    <label>Categoría IVA *</label>\n                    <select name=\"CategoriaIVA\" required>\n                        <option value=\"\">Seleccione...</option>\n                        <option value=\"Responsable Inscripto\">Inscripto</option>\n                        <option value=\"Monotributista\">Monotributista</option>\n                        <option value=\"Exento\">Exento</option>\n                    </select>\n                </div>\n                <div><label>CUIT / DNI *</label><input type=\"text\" name=\"Cuit_profesional\" pattern=\"[0-9]{7,11}\" required /></div>\n            </div>\n\n            <div class=\"grid\">\n                <div><label>IIBB (Ingresos Brutos) *</label><input type=\"text\" name=\"iibb_profesional\" required /></div>\n                <div><label>Inicio Actividad *</label><input type=\"date\" name=\"Inicio_actividad\" required /></div>\n            </div>\n\n            <label>Contraseña Certificado AFIP *</label>\n            <input type=\"password\" name=\"Contrasena_Certificado\" required />\n\n            <div class=\"grid\">\n                <div><label>Carpeta *</label><input type=\"text\" name=\"Carpeta\" required /></div>\n                <div><label>Archivo *</label><input type=\"text\" name=\"Archivo\" required /></div>\n            </div>\n\n            <label>Punto de Venta *</label>\n            <input type=\"number\" name=\"Punto_venta\" min=\"1\" max=\"9999\" required />\n\n            <button type=\"submit\" id=\"btnSubmit\">\n                <span>Finalizar Registro</span>\n                <div class=\"loader\" id=\"loader\"></div>\n            </button>\n        </form>\n    </div>\n\n  <div class=\"card\" id=\"success-container\">\n        <div class=\"icon-check\">✅</div>\n        <h1>¡Registro Exitoso!</h1>\n        <p>Tus datos han sido procesados correctamente.<br><b>Muchas gracias por la paciencia.</b></p>\n        \n        <button id=\"btnFinalizar\" class=\"btn-salir\">Salir</button>\n    </div>\n\n   <script>\n        const form = document.getElementById('registroForm');\n        const formContainer = document.getElementById('form-container');\n        const successContainer = document.getElementById('success-container');\n        const btnFinalizar = document.getElementById('btnFinalizar');\n\n        // Función para salir con \"Plan B\"\n        btnFinalizar.addEventListener('click', function() {\n            // Intento 1: Cerrar la pestaña\n            window.close();\n            \n            // Intento 2: Volver atrás\n            window.history.back();\n\n            // Intento 3: Si 500ms después sigue acá, cambiamos el botón\n            setTimeout(() => {\n                btnFinalizar.innerText = \"Listo, ya podés cerrar esta pestaña\";\n                btnFinalizar.style.backgroundColor = \"#6c757d\"; // Gris\n            }, 500);\n        });\n\n        form.addEventListener('submit', function(e) {\n            e.preventDefault();\n            \n            const btnSubmit = document.getElementById('btnSubmit');\n            const loader = document.getElementById('loader');\n            \n            btnSubmit.disabled = true;\n            loader.style.display = \"inline-block\";\n\n            const formData = new FormData(form);\n            const data = Object.fromEntries(formData.entries());\n\n            // Envío de datos al Webhook de n8n\n            fetch('https://n8ntest.goodappsautomation.com/webhook/guardar-datos', {\n                method: 'POST',\n                headers: { 'Content-Type': 'application/json' },\n                body: JSON.stringify(data)\n            })\n            .then(() => {\n                formContainer.style.display = 'none';\n                successContainer.style.display = 'block';\n            })\n            .catch(error => {\n                alert('Hubo un error al guardar. Intentá de nuevo.');\n                btnSubmit.disabled = false;\n                loader.style.display = \"none\";\n            });\n        });\n    </script>\n</body>\n</html>"
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        -80
+      ],
+      "id": "55c337b1-83e1-4896-afcb-f51f7d1a7a2a",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "content": "## Recibir datos",
+        "height": 400,
+        "width": 1184
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        112
+      ],
+      "id": "e534ec5d-424e-4c55-b3f1-c028a0dc9bc8",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4df07b21-eca3-46c3-a09e-3ddbee6a3a12",
+              "name": "body.nombre",
+              "value": "={{ $json.body.Nombre }}",
+              "type": "string"
+            },
+            {
+              "id": "37ff73db-62ce-42d8-a5ab-09ede73101d3",
+              "name": "body.apellido",
+              "value": "={{ $json.body.Apellido }}",
+              "type": "string"
+            },
+            {
+              "id": "8739afb1-1c4e-4344-81a5-de387659c65c",
+              "name": "body.cuit",
+              "value": "={{ $json.body.Cuit_profesional }}",
+              "type": "string"
+            },
+            {
+              "id": "3cdb4306-7c06-4e7f-8c7b-8148567fb704",
+              "name": "body.categoria_iva",
+              "value": "={{ $json.body.CategoriaIVA }}",
+              "type": "string"
+            },
+            {
+              "id": "55a10137-357e-44a6-a987-f3e9b7f98053",
+              "name": "body.carpeta",
+              "value": "={{ $json.body.Carpeta }}",
+              "type": "string"
+            },
+            {
+              "id": "0169a211-ae5f-4c27-9534-87aaa6b9eafa",
+              "name": "body.archivo",
+              "value": "={{ $json.body.Archivo }}",
+              "type": "string"
+            },
+            {
+              "id": "e245bc7d-12fe-46a3-a808-b1ddce317218",
+              "name": "body.punto_venta",
+              "value": "={{ $json.body.Punto_venta }}",
+              "type": "string"
+            },
+            {
+              "id": "dc7885b7-9590-40c2-a753-74cc8cb7913b",
+              "name": "ID_Telegram",
+              "value": "={{ $json.body.ID_Telegram }}",
+              "type": "string"
+            },
+            {
+              "id": "7dfe3a47-315f-4b38-98f0-725528328b95",
+              "name": "body.RazonSocial",
+              "value": "={{ $json.body.RazonSocial }}",
+              "type": "string"
+            },
+            {
+              "id": "921bc314-5e9b-4e57-aef9-6504197713ca",
+              "name": "body.Direccion_profesional",
+              "value": "={{ $json.body.Direccion_profesional }}",
+              "type": "string"
+            },
+            {
+              "id": "8f193929-fc34-40c9-8f34-23588106224c",
+              "name": "body.iibb_profesional",
+              "value": "={{ $json.body.iibb_profesional }}",
+              "type": "string"
+            },
+            {
+              "id": "858dc4e8-1015-4362-9c7c-30b86ed17a0b",
+              "name": "body.Inicio_actividad",
+              "value": "={{ $json.body.Inicio_actividad }}",
+              "type": "string"
+            },
+            {
+              "id": "211b7b5f-0502-4647-a7eb-2961fa9dd40e",
+              "name": "body.Contrasena_Certificado",
+              "value": "={{ $json.body.Contrasena_Certificado }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        304
+      ],
+      "id": "139dcca4-aa4e-4574-ab18-ed62d6e8fbf0",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b4c20d03-22f4-41b4-8fde-2b889502791f",
+              "leftValue": "={{ $json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        640,
+        304
+      ],
+      "id": "1e44a031-ced7-41ee-966c-22458f5e096a",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "TU_ID_DE_GOOGLE_SHEET",
+          "mode": "list",
+          "cachedResultName": "BD Facturación",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/TU_ID_DE_GOOGLE_SHEET/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 833019033,
+          "mode": "list",
+          "cachedResultName": "Profesionales",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/TU_ID_DE_GOOGLE_SHEET/edit#gid=833019033"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID_Telegram": "={{ $('Webhook1').item.json.body.ID_Telegram }}",
+            "Nombre": "={{ $('Edit Fields').item.json.body.nombre }}",
+            "Apellido": "={{ $('Edit Fields').item.json.body.apellido }}",
+            "Categoria IVA": "={{ $('Edit Fields').item.json.body.categoria_iva }}",
+            "Carpeta": "={{ $('Edit Fields').item.json.body.carpeta }}",
+            "Archivo ": "={{ $('Edit Fields').item.json.body.archivo }}",
+            "Punto de venta": "={{ $('Edit Fields').item.json.body.punto_venta }}",
+            "Direccion_profesional": "={{ $('Webhook1').item.json.body.Direccion_profesional }}",
+            "Razon social ": "={{ $('Webhook1').item.json.body.RazonSocial }}",
+            "Cuit_profesional": "={{ $('Webhook1').item.json.body.Cuit_profesional }}",
+            "Contraseña Certificado ": "={{ $('Webhook1').item.json.body.Contrasena_Certificado }}",
+            "Inicio de actividad": "={{ $('Webhook1').item.json.body.Inicio_actividad }}",
+            "iibb_profesional": "={{ $('Webhook1').item.json.body.iibb_profesional }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID_Telegram",
+              "displayName": "ID_Telegram",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Apellido",
+              "displayName": "Apellido",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Razon social ",
+              "displayName": "Razon social ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Categoria IVA",
+              "displayName": "Categoria IVA",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Direccion_profesional",
+              "displayName": "Direccion_profesional",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Cuit_profesional",
+              "displayName": "Cuit_profesional",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Carpeta",
+              "displayName": "Carpeta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Archivo ",
+              "displayName": "Archivo ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Contraseña Certificado ",
+              "displayName": "Contraseña Certificado ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Inicio de actividad",
+              "displayName": "Inicio de actividad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "iibb_profesional",
+              "displayName": "iibb_profesional",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Punto de venta",
+              "displayName": "Punto de venta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        912,
+        368
+      ],
+      "id": "21ef3f6e-d57c-4984-aecf-458f4536d644",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ubIMqprwL7Haak5h",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "TU_ID_DE_GOOGLE_SHEET",
+          "mode": "list",
+          "cachedResultName": "BD Facturación",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/TU_ID_DE_GOOGLE_SHEET/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 833019033,
+          "mode": "list",
+          "cachedResultName": "Profesionales",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/TU_ID_DE_GOOGLE_SHEET/edit#gid=833019033"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "ID_Telegram",
+              "lookupValue": "={{ $json.ID_Telegram }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        432,
+        304
+      ],
+      "id": "9f1e04d2-8801-4202-ab62-95a2a746ba4a",
+      "name": "Get row(s) in sheet",
+      "alwaysOutputData": true,
+      "executeOnce": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ubIMqprwL7Haak5h",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.ID_Telegram }}",
+        "text": "¡Listo! Tu registro se completó con éxito  Ya podés comenzar a usar el asistente de facturación cuando lo necesites.   Cualquier duda que tengas, estoy acá para ayudarte.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        832,
+        160
+      ],
+      "id": "56c069d7-79b7-4859-b3f3-749d4272f661",
+      "name": "Send a text message",
+      "webhookId": "3406bba3-8db9-4154-9e30-f7ed2410b076",
+      "credentials": {
+        "telegramApi": {
+          "id": "fPfrpCrLlbE5zHX9",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "bca9fe2a-4571-4006-8ad2-0ef3c60b08d0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5918e3353f91a836ba92cceb511cecf266624471bb1062fb025525a5b3db18fe"
+  },
+  "id": "5Od14HdSxw3kFwuc",
+  "tags": []
+}
